@@ -1,0 +1,196 @@
+# 고객사 교육용 실습 사이트: 사랑의교회
+
+지금의 체험 사이트(누리테크 기준, 영역 9개·시나리오 30편)는 **그대로 두고**, 같은 엔진으로 사랑의교회 교육용 실습 사이트를 따로 만듭니다.
+
+## 진행 방향
+
+### 1. 분리 방법: 같은 저장소의 새 브랜치
+
+| 브랜치 | 용도 |
+|---|---|
+| `claude/busy-wright-7wa9ee` | 지금 체험 사이트(공용). 고객사 작업으로는 건드리지 않음 |
+| `customer/sarang` | 사랑의교회 실습 사이트. `claude/busy-wright-7wa9ee` 에서 갈라져 나옴 |
+
+- 공용 사이트의 엔진 개선(버그 수정 등)은 나중에 `customer/sarang` 으로 합쳐(merge) 가져올 수 있습니다.
+- 배포도 따로 합니다. Azure Static Web Apps 리소스를 하나 더 만들고 배포 브랜치를 `customer/sarang` 으로 지정하면 주소가 따로 생깁니다.
+- 코드를 고객사에 넘기거나 접근 권한을 완전히 나눠야 하면, 브랜치 대신 저장소를 하나 복사해 쓰는 방법도 있습니다.
+
+### 2. 사이트 구성: 영역 5개 (홈 카드가 5열이라 한 줄에 딱 맞음)
+
+| 새 영역 id | 홈 카드 이름 | 가져오는 곳 | 시나리오 |
+|---|---|---|---|
+| `teams-basics` | Teams 기본 | **새로 만듦** (Copilot이 아닌 Teams 기본 기능 실습 화면) | 3편 |
+| `copilot-chat` | Copilot Chat | 지금의 Chat 시나리오 3편(인사·영업·운영 영역에 흩어져 있음) | 3편 |
+| `m365-apps` | Copilot in 앱 | 지금의 `m365-apps` 6편(Word·PowerPoint·Excel·Forms·Outlook·Teams) | 6편 |
+| `copilot-agent` | Copilot 에이전트 | 지금의 `copilot-studio` 3편 + Cowork 시나리오 중 1편 | 2~3편 |
+| `copilot-code` | Copilot Code | 지금의 `copilot-code` 3편 | 2~3편 |
+
+- **뺄 것**: 업무 영역 5개(영업·인사·재무·구매·운영)의 Cowork 시나리오, Power Automate 영역.
+- **화면·엔진은 그대로 쓰고, 시나리오 내용만 교회 업무로 다시 씁니다.** 새로 만드는 화면은 Teams 기본 실습 하나입니다.
+
+### 3. 시나리오 초안 (교회 행정·사역 지원 중심, 고객사와 조정)
+
+| 영역 | id | 제목(초안) |
+|---|---|---|
+| Teams 기본 | `teams-group-chat` | 수련회 준비팀 그룹 채팅방 만들고 첫 공지 보내기 |
+| | `teams-event` | 교사 모임 일정을 Teams 일정으로 만들고 참석자 초대하기 |
+| | `teams-team-files` | 사역팀 팀을 만들고 채널 파일에 폴더를 만들어 공유하기 |
+| Copilot Chat | `chat-notice` | 주보 광고·공지 문구를 같은 형식으로 다듬기 |
+| | `chat-policy-qa` | 시설 대관 규정 문서에서 신청 절차 찾기(출처 표시) |
+| | `chat-event-poster` | 바자회 포스터 이미지 시안 만들기 |
+| Copilot in 앱 | `word-retreat-plan` | Word: 지난 수련회 회의록으로 올해 기획안 초안 쓰기 |
+| | `ppt-briefing` | PowerPoint: 기획안으로 교사 설명회 발표자료 만들기 |
+| | `excel-signup` | Excel: 행사 참가 신청 현황을 부서별로 집계하고 차트 만들기 |
+| | `forms-survey` | Forms: 수련회 만족도 설문 만들고 응답 요약하기 |
+| | `outlook-reply` | Outlook: 협력 기관과 주고받은 긴 메일 요약하고 답장 쓰기 |
+| | `teams-catchup` | Teams: 놓친 사역팀 회의 내용 따라잡고 할 일 정리하기 |
+| Copilot 에이전트 | `agent-newcomer` | 새가족 안내 자료로 질문에 답하는 안내 에이전트 만들기 |
+| | `agent-volunteer` | (Cowork) 봉사자 신청 명단으로 배치표 만들고 안내 메일 보내기 |
+| Copilot Code | `code-volunteer-signup` | 봉사 신청 앱을 말로 만들기 |
+| | `code-attendance` | 소그룹 출석 체크 앱 만들기 |
+
+### 4. 교육용으로 바꿀 점
+
+- **"체험" → "실습"**: 문구를 실습 기준으로 바꿉니다(`src/copy.ts`).
+- **"실제로 해 보기" 카드**: 결과 화면에 실제 Teams·Copilot에서 따라 할 순서를 번호로 보여 줍니다. 시나리오 JSON에 `practice` 항목을 추가해 시나리오마다 적습니다. 시뮬레이션으로 익힌 뒤 실제 계정으로 바로 해 볼 수 있게 하는 장치입니다.
+- **이미지**: 원본 부스 이미지 대신 새로 그린 이미지(`docs/design-draft/`)를 기본값으로 씁니다. 새 시나리오의 상황 그림은 새로 그립니다.
+- **푸터·안내문**: "© Microsoft 2026" 은 교육 주관 쪽 이름으로 바꾸거나 지웁니다. 안내문은 "이 실습의 인물·수치는 모두 가상의 예시입니다."
+
+### 5. 지켜야 할 것
+
+- 실존 교인·교역자 이름, 연락처, 헌금·재정 실제 수치는 쓰지 않습니다. 인물·수치는 가상입니다.
+- 교회 이름·로고는 고객사 허락을 받은 범위에서만 씁니다. 로고 파일은 고객사에게 받아 `docs/customer-sarang/assets/` 에 넣고, 인터넷에서 가져오지 않습니다.
+- 설교·신앙 내용을 Copilot이 대신 쓰는 장면은 만들지 않습니다. 행정·사역 지원 업무만 다룹니다.
+
+## 고객사 확인 사항 (작업 전에 채우기)
+
+| 항목 | 기본값(답이 없을 때) | 고객사 답 |
+|---|---|---|
+| "Teams 방 생성" 의 뜻 | 그룹 채팅방 만들기 | |
+| "Copilot Agent" 로 보여 줄 제품 | Copilot Studio 안내 에이전트 1편 + Cowork 1편 | |
+| 교육 대상 | 교역자·사무 직원(개발자 아님) | |
+| 교회 이름·로고 사용 | 이름만 사용, 로고 없음 | |
+| 쓰는 용어(부서·사역팀·소그룹 이름) | 일반 용어(교구, 사역팀, 소그룹) | |
+| 실제 실습 환경 | 시뮬레이션만, "실제로 해 보기" 카드는 안내용 | |
+| 라이선스 | Copilot Chat만 확인됨. Microsoft 365 Copilot(앱 안 Copilot)·Copilot Studio·Copilot Code 사용 가능 여부는 고객사 관리자 확인 | |
+| 배포 | 별도 주소(Azure Static Web Apps) + 더블클릭 폴더 | |
+
+## 제품 사실 확인
+
+- **Copilot Code, Copilot Studio 하네스, Copilot in 앱**: `docs/EXPANSION-PLAN.md` 의 "제품 사실 확인" 범위 안에서만 씁니다. Copilot Code는 관리자가 사용량(크레딧) 지출 정책을 만들어야 테넌트에서 동작하므로, 고객사 테넌트에서 바로 실습이 안 될 수 있습니다.
+- **Teams 기본 기능**(그룹 채팅, 일정, 팀·채널, 채널 파일 공유): 2단계를 시작할 때 Microsoft 지원 문서·Microsoft Learn에서 현재 화면 순서와 단추 이름을 확인하고, 확인한 주소를 아래에 적습니다.
+  - 그룹 채팅(새 채팅 → 받는 사람 옆 화살표 → 그룹 이름 → 받는 사람 → 보내기, 참가자 보기 및 추가, 250명): https://support.microsoft.com/ko-kr/office/microsoft-teams%EC%9D%98-%EA%B7%B8%EB%A3%B9-%EC%B1%84%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EC%95%BC-%ED%95%A0-%EC%B2%AB-%EB%B2%88%EC%A7%B8-%EC%82%AC%ED%95%AD-d563174d-ca98-440c-ade1-69176512122d
+  - 모임 예약(일정 → 시간대 선택 또는 새로 만들기 → 세부 정보·필수 참석자 → Teams 모임 토글 → 저장, 스케줄러): https://support.microsoft.com/ko-kr/teams/meetings/schedule-a-meeting-in-microsoft-teams
+  - 팀 만들기(채팅 또는 Teams → 새 항목 → 새 팀 → 팀 이름·설명·비공개/공개·첫 번째 채널 이름 → 만들기): https://support.microsoft.com/ko-kr/office/microsoft-teams%EC%97%90%EC%84%9C-%EC%B2%98%EC%9D%8C%EB%B6%80%ED%84%B0-%ED%8C%80-%EB%A7%8C%EB%93%A4%EA%B8%B0-174adf5f-846b-4780-b765-de1a0a737e2b
+  - 채널 만들기(새 항목 → 새 채널, 표준·비공개·공유): https://support.microsoft.com/ko-kr/office/microsoft-teams%EC%97%90%EC%84%9C-%EA%B3%B5%EC%9C%A0-%EC%B1%84%EB%84%90-%EB%A7%8C%EB%93%A4%EA%B8%B0-80712457-579e-42b2-b54f-112329578aaa
+  - 채널 파일(채널의 공유 탭, 채널마다 SharePoint 문서 라이브러리, 파일의 공유 → 링크 복사): https://support.microsoft.com/ko-KR/teams/files/share-files-in-microsoft-teams
+  - 채널에 올리기(채널 → Shared → 끌어다 놓기 또는 Upload): https://support.microsoft.com/en-us/teams/files/collaborate-on-files-in-microsoft-teams
+  - 새로 만들기 → 폴더·Word·Excel·PowerPoint: https://support.microsoft.com/ko-kr/teams/teams-channels/add-content-and-notes-to-a-team-in-microsoft-teams
+  - 저장 위치(SharePoint): https://support.microsoft.com/en-us/teams/files/file-storage-in-microsoft-teams
+  - **실제 화면에서 확인한 표기 (2026-11-14, 한국어 Teams 데스크톱 앱, 교육 주관 쪽 테넌트)** — 문서와 다른 곳은 실제 화면을 따랐습니다. 화면은 `src/surfaces/TeamsApp.tsx`, 문구는 시나리오 JSON 에 있습니다.
+    - 앱 바: 활동 · 채팅 · Teams · 일정 · OneDrive · 통화 · 앱. 팀과 채널은 채팅이 아니라 **Teams** 에 모여 있음. 검색란은 "검색하거나 Copilot에게 질문하기(Ctrl+E)".
+    - 채팅: 목록 위 연필 아이콘이 **새 메시지**(Ctrl+N), 그 옆 화살표가 새 항목. 새 메시지 창의 받는 사람 줄은 **"대상:"**, 오른쪽 끝 화살표를 누르면 그 위에 **"그룹 이름:"** 칸이 생김. 입력란은 "메시지를 입력하세요.". 대화 위 탭은 **채팅 · 공유**.
+    - 일정: 새 모임 단추는 **"신규"**. 창 제목은 **"새 이벤트"**, 칸은 **"제목 추가" · "필수 참석자 초대"**, 날짜·시간 줄에 **"스케줄러"**, 토글은 **"Microsoft Teams 모임"**, 마지막 단추는 **"저장"**.
+    - 팀: Teams 목록의 새 항목 메뉴(새 메시지 · 새 채널 · 팀 참가 · **새 팀** · 새 섹션) → 창 제목 **"팀 만들기"**, 칸은 "팀 이름 *" · "설명" · "팀 유형"(비공개) · "첫 번째 채널 이름 *", 단추는 취소 · 만들기.
+    - 채널: 탭은 **게시물 · 공유**, 글 쓰는 단추는 "채널에 게시". 공유 탭 오른쪽의 **"만들기 또는 업로드"** 한 단추 안에 폴더 · 파일 업로드 · 폴더 업로드 · Word 문서 · Excel 통합 문서 · PowerPoint 프레젠테이션이 있음. 열 이름은 이름 · 수정된 날짜 · 수정한 사람.
+    - 고객사 테넌트는 설정(채팅과 채널을 합쳐 보기 등)에 따라 앱 바와 새 항목 메뉴가 다를 수 있습니다.
+- **Word · Excel · PowerPoint 화면 (2026-11-14, 한국어 데스크톱 앱에서 확인)**: `src/surfaces/OfficeChrome.tsx` 와 `src/styles/office-real.css` 에 옮겼습니다.
+  - 제목 표시줄(자동 저장 · 파일 이름 - 앱 · 검색), 탭 이름, 홈 탭의 그룹 이름(Word: 클립보드 · 글꼴 · 단락 · 스타일 · 편집 · 음성 · 편집기 · 추가 기능 / Excel: 클립보드 · 글꼴 · 맞춤 · 표시 형식 · 스타일 · 셀 · 편집 · 추가 기능 / PowerPoint: 클립보드 · 슬라이드 · 글꼴 · 단락 · 그리기 · 편집 · 음성 · 추가 기능 · Copilot), 오른쪽 단추(메모 · 편집 · 공유), 상태 표시줄.
+  - **Copilot 은 리본이 아니라 문서 오른쪽 아래의 둥근 Copilot 단추로 엽니다.** Copilot 창은 위쪽에 모델("자동") · 닫기, 아래쪽에 "편집 허용", 입력란("Copilot으로 편집"), "M365 Copilot(프리미엄)" 순서입니다. 빈 Word 문서의 창 제목은 "무엇을 만드시겠습니까?" 였습니다.
+  - 리본의 추가 기능(ChatGPT 등)과 민감도 레이블처럼 테넌트마다 다른 것은 넣지 않았습니다.
+  - Excel · PowerPoint 의 Copilot 창 안쪽 문구는 Word 와 같은 틀이라는 것만 확인했습니다.
+- **Outlook · Teams 모임 채팅 · Forms 화면 (2026-11-14, 한국어 새 Outlook · Teams 데스크톱 앱 · Forms 웹에서 확인)**: `src/surfaces/WebChrome.tsx` 와 `src/styles/office-real.css` 에 옮겼습니다. 읽기만 했고 메일·채팅 내용은 옮기지 않았습니다.
+  - Outlook: 검색란 "검색하거나 Copilot에게 질문하기", 탭 파일 · 홈 · 보기 · 도움말, 리본(새 메일 · 삭제 · 보관 · 이동 · 회신 · 전체 회신 · 전달 · 빠른 단계 · 모두 읽은 상태로 표시), **리본 오른쪽 끝의 Copilot 단추**로 Copilot 창을 엽니다. 메일 위에 **"이 이메일 요약"** 줄이 있고, Copilot 창의 입력란은 "Copilot에 메시지 보내기", 제안은 "이 이메일 요약" · "이 이메일 요약 및 회신" 입니다. 왼쪽 앱 바와 메일 목록 열은 그리지 않고 폴더 열만 두었습니다.
+    - 요약(메일 맨 위의 "Copilot별 요약" 또는 "요약"): https://support.microsoft.com/ko-kr/outlook/copilot-pages/summarize-an-email-thread-with-copilot-in-outlook
+    - 답장 초안(메시지 영역의 Copilot 상자 → 생성 → 유지 → 보내기, 또는 채팅에서 요청): https://support.microsoft.com/ko-kr/outlook/copilot-pages/draft-an-email-message-with-copilot-in-outlook
+  - Teams: 모임 채팅의 머리글(탭 채팅 · 공유 · 노트 · **요약**, 오른쪽에 참가 · 사람 · **Copilot 아이콘** · 검색). Copilot 창은 인사말 "안녕하세요, 어떻게 도와드릴까요?", 입력란 "Copilot에 메시지 보내기", 제안 "이 채팅 요약" 입니다. 요약 탭은 회의 중에 기록을 켜 두어야 채워집니다.
+    - 회의 중(모임 컨트롤의 Copilot, 5분 넘게 늦으면 "Copilot 열기" 알림)과 회의 뒤(모임 채팅 오른쪽 위 · 요약 탭), 대화 내용 기록 조건: https://support.microsoft.com/ko-kr/teams/copilot/catch-up-on-meetings-with-microsoft-365-copilot-in-teams
+  - Forms: 위쪽 도구 모음(스타일 · 설정 · 미리 보기 · **응답 수집** · **응답 보기** · 프레젠테이션), 새 양식 위의 **"Copilot으로 초안 작성"** 상자와 그 안내 글. 오른쪽 Copilot 창은 처음에는 없습니다.
+    - 생성 → 유지 → 오른쪽 아래 Copilot 단추로 채팅 열기 → 응답 보기에서 Copilot으로 결과 분석: https://support.microsoft.com/ko-kr/forms/welcome-to-copilot-in-forms
+  - **확인하지 못한 화면**: Teams 의 **회의 중 창**(모임 컨트롤), Forms 의 **생성 뒤 화면 · Copilot 채팅 창 · 응답 보기 화면**, Outlook 의 **작성 창 안 Copilot 상자**는 실제 화면을 보지 못했습니다. 이 부분은 위 지원 문서의 순서만 따랐고, 화면 모양(대화 형식, 입력란 글)은 다른 앱의 Copilot 창과 같은 틀로 그렸습니다. Copilot Studio 와 Code 탭도 실제 화면과 대조하지 못했습니다(이전 구성 그대로).
+- **Copilot 에이전트**: 고객사 답이 없어 기본값(Copilot Studio 안내 에이전트 1편 + Cowork 1편)으로 만들었습니다. 2026-11-14 확인.
+  - 지식 원본(공개 웹사이트 · 올린 문서 · SharePoint · Dataverse · 커넥터): https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-copilot-studio
+  - 토픽(토픽 추가 → 처음부터. 클래식 오케스트레이션은 트리거 문구 5~10개, 생성형 오케스트레이션은 토픽 설명으로 고름): https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-edit-topics
+  - Teams에 열기(먼저 게시 → 채널 → "Microsoft 365 and Microsoft Teams" → 채널 추가): https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams
+  - 대안(Copilot 앱 안의 Agent Builder, 지침과 지식만 넣는 간단한 에이전트. 쓸 수 있는 범위는 테넌트 라이선스에 따름): https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder
+  - 화면의 "Standard 하네스"·"Copilot Cowork" 표기는 `docs/EXPANSION-PLAN.md` 의 제품 사실 확인을 그대로 따릅니다. 고객사 교육 자료의 "나만의 에이전트 생성"이 Agent Builder를 뜻하면 `agent-newcomer` 의 "실제로 해 보기" 순서를 그에 맞게 바꿔야 합니다.
+
+## 작업 순서 (단계 하나 = 세션 하나, 끝날 때마다 커밋)
+
+- [x] 1. **기반 정리**: `customer/sarang` 브랜치 만들기. 영역 5개로 바꾸기(`src/tracks.ts`, `scripts/check-scenarios.mjs` 의 `TRACKS`, 홈 카드 아이콘). Chat 시나리오 3편과 에이전트용 Cowork 1편을 새 영역 폴더로 옮기고, 쓰지 않는 시나리오·영역 삭제. 문구·푸터·안내문 교체. 이미지 시안을 기본값으로(`?look=draft` 없이도 새 이미지). 이 단계에서는 시나리오 내용은 아직 그대로 둠.
+- [x] 2. **Teams 기본 실습 화면 + 3편**: Teams 앱 모양의 화면(채팅 목록, 일정, 팀·채널, 파일 탭)을 `src/surfaces/` 에 추가. 화면 찾기(spot)와 단추 안내(cue)로 순서대로 눌러 보게 함. 결과 화면 "실제로 해 보기" 카드(`practice`) 추가.
+- [x] 3. **Copilot Chat 3편**: 교회 업무로 다시 쓰기. 포스터 이미지는 새로 그림.
+- [x] 4. **Copilot in 앱 6편**: 교회 업무로 다시 쓰기.
+- [x] 5. **Copilot 에이전트 2~3편**: 고객사 답에 맞춰 다시 쓰기.
+- [x] 6. **Copilot Code 2~3편**: 교회 업무로 다시 쓰기.
+- [x] 7. **전체 점검**: 모든 시나리오 e2e, 1600×900·1371×768 스크린샷, `npm run build:local` 더블클릭 폴더, (선택) 배포.
+
+## 진행 결과 (2026-11-14)
+
+1~7단계를 마쳤습니다. 영역 5개, 시나리오 16편이고 모든 시나리오가 e2e를 통과합니다. `npm run build`(배포용 `dist/`)와 `npm run build:local`(더블클릭용 `dist-local/`)도 확인했습니다.
+
+### 고객사 답이 없어 기본값으로 진행한 것
+
+| 항목 | 적용한 기본값 |
+|---|---|
+| "Teams 방 생성" | 그룹 채팅방 만들기 (`teams-group-chat`) |
+| "Copilot Agent" | Copilot Studio 안내 에이전트 1편 + Cowork 1편 |
+| 교육 대상 | 교역자·사무 직원 (개발자 아님) |
+| 교회 이름·로고 | 이름만 사용(홈 푸터 "사랑의교회 교육용 실습"), 로고·사진 없음 |
+| 용어 | 일반 용어 (교육부, 봉사부, 새가족부, 청년부, 소그룹, 조) |
+| 실습 환경 | 시뮬레이션. "실제로 해 보기" 카드는 안내용 |
+| 라이선스 | 시나리오마다 필요한 라이선스를 "실제로 해 보기"에 적음 |
+| 배포 | 아직 배포하지 않음. `dist/` 와 `dist-local/` 만 만들어 확인 |
+
+### 초안(3절)과 달라진 것
+
+- `ppt-briefing`: "교사 설명회"를 "조장 설명회"로 바꿨습니다. Word 기획안과 같은 수련회 이야기로 잇기 위해서입니다.
+- Copilot 에이전트는 2편입니다. Studio의 하네스 비교·옮기기 편은 대상(개발자 아님)에 맞지 않아 뺐습니다.
+- Copilot Code는 2편입니다.
+- 고객사 교육 자료(2026년 9월 교육 순서)에 있던 "성경퀴즈 게임 만들기"와 "기도카드 이미지 만들기"는 넣지 않았습니다. 신앙 내용을 Copilot이 쓰는 장면이라 5절 기준에 걸립니다. 넣으려면 고객사 확인이 필요합니다.
+- 원본 부스의 대기 화면 영상, 목록 그래픽, 포스터 이미지, 상황 그림은 이 브랜치에서 쓰지 않습니다(파일 삭제 또는 번들 제외).
+
+### 고객사에 확인할 것
+
+1. 위 표의 기본값 8가지가 맞는지.
+2. 고객사 테넌트의 Teams 화면이 위 "실제 화면에서 확인한 표기"와 같은지(특히 앱 바에 Teams 가 따로 있는지). 교육 주관 쪽 테넌트에서 확인한 것이라 설정에 따라 다를 수 있습니다.
+3. 쓰는 용어(부서·사역팀·소그룹 이름)와 등장인물 이름. 지금은 일반 용어와 가상 이름(김하늘, 박소망, 이은혜, 최믿음 등)입니다.
+4. "나만의 에이전트 생성"이 Copilot Studio인지 Copilot 앱의 Agent Builder인지.
+5. Microsoft 365 Copilot, Copilot Studio, Copilot Code, Cowork을 교육 환경에서 실제로 쓸 수 있는지. 못 쓰는 영역은 "시뮬레이션만"이라고 안내해야 합니다.
+6. 성경퀴즈·기도카드 실습을 넣을지.
+
+## 새 세션에 붙여 넣을 프롬프트
+
+클라우드 세션이든 내 PC의 Claude Code든 같은 프롬프트를 씁니다. 단계마다 새 세션을 열고 같은 프롬프트를 다시 붙여 넣으면 다음 단계로 넘어갑니다.
+
+```text
+이 저장소는 Microsoft Copilot 체험(시연) 사이트입니다. React + Vite + TypeScript, 시나리오는 src/scenarios/<영역>/<id>.scenario.json 입니다.
+지금 할 일은 이 사이트를 바탕으로 고객사(사랑의교회) 교육용 실습 사이트를 따로 만드는 것입니다. 기존 체험 사이트는 그대로 둡니다.
+
+브랜치:
+- 작업 브랜치는 customer/sarang 입니다. 원격에 있으면 받아서 이어서 하고, 없으면 origin/claude/busy-wright-7wa9ee 에서 새로 만드세요.
+- claude/busy-wright-7wa9ee 에는 커밋하거나 푸시하지 마세요. 푸시는 customer/sarang 에만 합니다.
+
+먼저 읽을 것: docs/customer-sarang/PLAN.md(진행 방향, 작업 순서, 고객사 확인 사항), README.md. 원본 화면 구조가 필요할 때만 docs/reference/ 에서 필요한 절을 grep 으로 찾아 읽으세요(파일 전체를 읽지 마세요).
+
+목표: PLAN.md 의 "작업 순서" 중 아직 끝나지 않은 첫 단계 하나만 진행합니다. git log 와 PLAN.md 의 체크 표시로 어디까지 됐는지 확인하세요.
+
+지켜야 할 것:
+- 실존 교인·교역자 이름, 연락처, 헌금·재정 수치 같은 실제 정보는 쓰지 마세요. 인물·수치는 가상으로 만듭니다.
+- 교회 로고·사진은 docs/customer-sarang/assets/ 에 고객사가 준 파일이 있을 때만 씁니다. 인터넷에서 가져오지 마세요.
+- 설교·신앙 내용을 Copilot이 대신 쓰는 장면은 만들지 말고 행정·사역 지원 업무를 다룹니다.
+- 고객사 확인 사항에 답이 없으면 표의 기본값으로 진행하고, 그렇게 했다고 마지막에 알려 주세요.
+- 제품 기능은 PLAN.md 의 "제품 사실 확인" 범위 안에서만 씁니다. 새로 다루는 기능은 Microsoft 지원 문서·Microsoft Learn 에서 현재 화면 순서와 단추 이름을 확인하고, 확인한 주소를 PLAN.md 에 적으세요. 확실하지 않은 기능은 지어내지 마세요.
+- 기존 스타일(src/styles/reference.css)은 고치지 말고 새 스타일은 별도 CSS 파일에 추가합니다. 시나리오 JSON 은 기존 파일과 같은 구조로 직접 쓰고, 서브에이전트를 병렬로 띄우지 마세요.
+- 끝나면 모두 통과시키세요.
+  1) npm run check:scenarios
+  2) npm run build
+  3) npm run dev 를 띄운 상태에서 새로 만들거나 고친 시나리오마다 node scripts/e2e.cjs <영역> <id> e2e-out → "done": true, errors 빈 배열 (Playwright 를 못 찾으면 앞에 NODE_PATH=$(npm root -g) 를 붙여 실행)
+  4) 홈·목록·실습·결과 화면을 1600×900 스크린샷으로 찍어 직접 확인
+- 통과하면 PLAN.md 의 해당 단계에 [x] 표시를 하고 customer/sarang 에 커밋·푸시한 뒤, 한 일, 다음 단계, 고객사에 확인할 것을 짧게 알려 주세요.
+```
+
+## 비용 줄이기
+
+- 단계 하나가 끝나면 세션을 닫고 새 세션에서 같은 프롬프트로 시작합니다. 긴 대화를 이어가는 것보다 훨씬 적게 듭니다.
+- 고객사 확인 사항을 먼저 채워 두면 다시 고치는 일이 줄어듭니다.

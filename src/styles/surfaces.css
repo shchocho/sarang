@@ -1,0 +1,295 @@
+/* 확장 영역(제품 기능 체험)용 스타일 — 원본 재현 스타일(reference.css)은 고치지 않고 여기에만 더합니다. */
+
+/* ---------- 홈: 업무 영역 5개 + 제품 기능 체험 4개를 두 줄로 ---------- */
+.booth-track-groups {
+  width: 100%;
+  margin: 10px auto auto;
+  display: grid;
+  gap: 10px;
+}
+.booth-track-groups h2 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: var(--w-label, 600);
+  letter-spacing: .02em;
+  color: var(--copilot-ink-2);
+}
+/* 가로 화면(1371×768 기준)에서만 카드를 줄여 두 줄에 맞춘다. 세로 화면은 원본 배치를 그대로 쓴다 */
+:root[data-orient=landscape] .booth-track-groups .booth-track-grid {
+  margin: 0 auto;
+  gap: 16px;
+  grid-template-columns: repeat(var(--cols, 5), minmax(0, 178px));
+  justify-content: center;
+}
+:root[data-orient=landscape] .booth-home .booth-foot {
+  padding-top: 10px;
+}
+
+/* ---------- Office 화면: Copilot 창 안에 입력란을 둔다 ---------- */
+.sc-shell.is-office[data-app=word] { --track: var(--m365-word-bright); --track-ink: var(--m365-word-dark); }
+.sc-shell.is-office[data-app=excel] { --track: var(--m365-excel-bright); --track-ink: var(--m365-excel-dark); }
+.sc-shell.is-office[data-app=powerpoint] { --track: var(--m365-powerpoint-bright); --track-ink: var(--m365-powerpoint-dark); }
+.sc-shell.is-office .sc-pane {
+  display: flex;
+  flex-direction: column;
+}
+.sc-shell.is-office .sc-pane .sc-stream-in {
+  flex: 1;
+  align-content: start;
+}
+.sc-shell.is-office .sc-pane .sc-composer.is-pane {
+  position: relative;
+  margin: 0;
+  background: #fff;
+}
+.sc-shell.is-office .sc-canvas .wb-wd {
+  padding: 20px 0 28px;
+}
+
+/* Copilot 창 입력란의 "/" 자료 찾기 (Copilot Chat 입력창과 같은 모양) */
+.sc-shell .wb-slashq { color: #0f6cbd; background: #eaf3fb; border-radius: 5px; padding: 0 3px; white-space: nowrap; }
+.sc-shell .wb-caret { display: inline-block; width: 1.5px; height: 1.05em; margin-left: 1px; background: #1b1a19; vertical-align: -2px; animation: wb-caret-blink 1.05s steps(1) infinite; }
+.sc-shell .cwr-link { color: #0f6cbd; background: #eaf3fb; border-radius: 5px; padding: 0 4px; }
+.sc-shell .wb-slash {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 10px);
+  z-index: 40;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e4e4e4;
+  border-radius: 12px;
+  box-shadow: var(--shadow8);
+  animation: wb-slash-in .16s ease both;
+}
+.sc-shell .wb-slash-tabs { display: flex; gap: 12px; list-style: none; margin: 0 0 6px; padding: 4px 8px 8px; font-size: 12px; color: var(--sc-ink-2, #605e5c); border-bottom: 1px solid #efefef; }
+.sc-shell .wb-slash-tabs .on { color: #1b1a19; font-weight: 700; }
+.sc-shell .wb-slash-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; font: inherit; text-align: left; background: #fff; border: 1.5px solid transparent; border-radius: 8px; }
+.sc-shell .wb-slash-row.is-pick { cursor: pointer; }
+.sc-shell .wb-slash-row.is-pick:hover,
+.sc-shell .wb-slash-row.on { border-color: #1b1a19; background: #fafafa; }
+.sc-shell .wb-slash-name { flex: 1; min-width: 0; font-size: 13px; color: #1b1a19; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sc-shell .wb-slash-meta { display: none; }
+
+/* 좁은 Copilot 창에 맞춘 대화 글자 크기. 대화가 시작되면 인사말을 접어 자리를 넓힌다 */
+.sc-shell.is-office .sc-pane:has(.sc-stream-in > .sc-user) :is(.sc-pane-head, .sc-pane-sub, .sc-pane-allow) { display: none; }
+.sc-shell.is-office .sc-pane :is(.sc-user-box p, .sc-answer-body p, .sc-check li) { font-size: 13px; line-height: 1.65; }
+.sc-shell.is-office .sc-pane .sc-user-box { max-width: 92%; padding: 10px 14px; }
+.sc-shell.is-office .sc-pane .sc-answer-acts svg { width: 16px; height: 16px; }
+
+/* 목록: 회전 카드 영역이 "제품별 시나리오 보기" 단추 위를 덮어 눌리지 않던 것을 막는다 */
+.booth-view-action { position: relative; z-index: 1; }
+
+/* ---------- 시트에 넣은 막대 차트 (sheet.charts) ---------- */
+.wb-xl-chart {
+  width: min(460px, calc(100% - 32px));
+  margin: 16px;
+  padding: 12px 16px 14px;
+  display: grid;
+  gap: 7px;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+}
+.wb-xl-chart figcaption { margin-bottom: 2px; font-size: 13px; font-weight: 600; color: #1b1a19; text-align: center; }
+.wb-xl-chart p { margin: 0; display: grid; grid-template-columns: 56px minmax(0, 1fr) 52px; align-items: center; gap: 8px; font-size: 12px; color: #424242; }
+.wb-xl-chart i { height: 14px; background: var(--m365-excel-bright, #359238); border-radius: 0 2px 2px 0; }
+.wb-xl-chart b { font-weight: 600; text-align: right; }
+.wb-xl-chart .is-warn i { background: #d13438; }
+.wb-xl-chart .is-warn b { color: #a4262c; }
+
+/* Office 창 가운데: 시트는 행을 촘촘하게(표 아래 차트가 보이도록), 슬라이드는 크게 */
+.sc-shell.is-office .sc-canvas .wb-xl-grid :is(th, td) { padding-block: 4px; }
+.sc-shell.is-office .sc-canvas .wb-xl-chart { margin: 12px 16px; padding: 10px 14px 12px; gap: 5px; }
+.sc-shell.is-office .sc-canvas .wb-xl-chart i { height: 12px; }
+.sc-shell.is-office .sc-canvas .wb-pp-slide { zoom: 1.45; }
+
+/* ---------- Power Automate 흐름 (kind: flow) ---------- */
+.fl {
+  --fl: #0066ff;
+  margin: 0;
+  padding: 22px 24px 28px;
+  list-style: none;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  counter-reset: fl;
+  font-family: var(--desk-font);
+}
+.fl li {
+  position: relative;
+  width: min(440px, 100%);
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: var(--borderRadiusXLarge);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+  counter-increment: fl;
+}
+.fl li + li::before { content: ""; position: absolute; left: 50%; top: -18px; height: 18px; border-left: 2px solid #c4c4c4; }
+.fl li > i { grid-row: 1 / span 3; width: 34px; height: 34px; display: grid; place-items: center; font-style: normal; font-size: 16px; color: #fff; background: var(--fl); border-radius: var(--borderRadiusLarge); }
+.fl li > b { grid-column: 2; font-size: 13.5px; font-weight: 600; color: #1b1a19; }
+.fl li > span { grid-column: 2; font-size: 12px; line-height: 1.5; color: #605e5c; }
+.fl li > u { grid-column: 3; grid-row: 1; width: 22px; height: 22px; display: grid; place-items: center; text-decoration: none; font-size: 12px; font-weight: 700; color: #fff; background: #107c41; border-radius: 50%; }
+.fl li > em { grid-column: 2 / span 2; margin-top: 2px; font-style: normal; font-size: 12px; color: #0b6a3a; }
+.fl li:first-child { border-top: 3px solid var(--fl); }
+.fl li.is-now { border-color: var(--fl); box-shadow: 0 0 0 3px color-mix(in srgb, var(--fl) 22%, transparent); }
+.fl li.is-fail { border-color: #d13438; }
+.fl li.is-fail > u { background: #d13438; }
+.fl li.is-fail > em { color: #a4262c; }
+.fl li.is-skip > u { background: #8a8886; }
+.fl li.is-skip > em { color: #605e5c; }
+/* 데스크톱 흐름: 번호가 붙은 작업 목록 */
+.fl[data-app=deskflow] { justify-items: stretch; gap: 0; padding: 12px 16px 20px; }
+.fl[data-app=deskflow] li { width: auto; grid-template-columns: 26px 30px minmax(0, 1fr) auto; padding: 8px 12px; border-radius: 0; border-width: 0 0 1px; box-shadow: none; }
+.fl[data-app=deskflow] li::before { content: counter(fl); position: static; height: auto; border: 0; grid-row: 1 / span 3; font-size: 12px; color: #8a8886; text-align: right; }
+.fl[data-app=deskflow] li:first-child { border-top: 0; }
+.fl[data-app=deskflow] li > i { width: 28px; height: 28px; font-size: 14px; }
+.fl[data-app=deskflow] li > b,
+.fl[data-app=deskflow] li > span { grid-column: 3; }
+.fl[data-app=deskflow] li > u { grid-column: 4; }
+.fl[data-app=deskflow] li > em { grid-column: 3 / span 2; }
+.fl[data-app=deskflow] li.is-now { box-shadow: inset 3px 0 0 var(--fl); background: color-mix(in srgb, var(--fl) 6%, #fff); }
+.fl[data-app=deskflow] li.is-fail { background: #fdf3f4; }
+
+/* 흐름 디자이너 창 */
+.sc-shell.is-office[data-app$=flow] { --track: #0066ff; --track-ink: #0047b3; }
+.sc-shell.is-office[data-app$=flow] .sc-canvas { background: #f5f5f5; }
+.sc-shell.is-office[data-app=deskflow] .sc-canvas { background: #fff; }
+/* 데스크톱 흐름 창의 기록은 Copilot 이 한 일이 아니므로 Copilot 표시 없이 한 줄 기록으로 보인다 */
+.sc-pane[data-pane=deskflow] .sc-act { padding: 6px 10px; }
+.sc-pane[data-pane=deskflow] .sc-act-h { display: none; }
+.sc-shell.is-office .sc-pane .sc-note { text-align: left; font-size: 12.5px; line-height: 1.6; }
+
+/* ---------- 데스크톱 흐름이 조작하는 대상 프로그램 화면 (flow.screen) ---------- */
+.fl-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 40%); align-items: start; min-height: 100%; }
+.fl-wrap > .fl { min-width: 0; }
+.sc-done .fl-wrap { display: block; }
+.sc-done .fl-screen { display: none; }
+/* 일부러 예전 업무 프로그램처럼 그린다 */
+.fl-screen {
+  position: sticky;
+  top: 16px;
+  margin: 16px 16px 16px 4px;
+  font-family: "Malgun Gothic", var(--desk-font);
+  font-size: 12px;
+  color: #1b1a19;
+  background: #d4d0c8;
+  border: 2px solid #fff;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .22);
+}
+.fl-screen p { margin: 0; }
+.fl-screen-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 8px; color: #fff; background: linear-gradient(90deg, #0a246a, #3a6ea5); }
+.fl-screen-bar span { font-size: 11px; opacity: .85; }
+.fl-screen.is-live .fl-screen-bar span { padding: 1px 7px; opacity: 1; color: #1b1a19; background: #ffe066; border-radius: var(--borderRadiusCircular); }
+.fl-screen-menu { padding: 4px 8px; word-spacing: 10px; border-bottom: 1px solid #808080; }
+.fl-screen-menu.is-on { background: #0a246a; color: #fff; }
+.fl-screen-form { --rh: 38px; position: relative; padding: 12px 14px 6px; }
+.fl-screen-form > p { height: var(--rh); display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; gap: 8px; }
+.fl-screen-form > p > b { height: 24px; padding: 3px 6px; font-weight: 400; font-family: Consolas, "Malgun Gothic", monospace; background: #fff; border: 2px solid #808080; border-right-color: #fff; border-bottom-color: #fff; animation: fl-type .3s steps(8) both; }
+.fl-screen-form > p.is-on > b { outline: 2px solid #0a246a; }
+.fl-screen-form > p > u { grid-column: 2; justify-self: end; padding: 4px 16px; text-decoration: none; background: #d4d0c8; border: 2px solid #fff; border-right-color: #404040; border-bottom-color: #404040; }
+.fl-screen-form > p > u.is-on { border-color: #404040 #fff #fff #404040; background: #c2beb5; }
+.fl-screen-popup { position: absolute; inset: 26px 12px auto 64px; padding: 0 0 12px; display: grid; gap: 7px; background: #d4d0c8; border: 2px solid #fff; border-right-color: #404040; border-bottom-color: #404040; box-shadow: 3px 3px 0 rgba(0, 0, 0, .25); }
+.fl-screen-popup b { padding: 3px 8px; font-weight: 400; color: #fff; background: #0a246a; }
+.fl-screen-popup span { height: 14px; margin: 0 10px; background: #fff; border: 1px solid #808080; }
+.fl-screen-say { min-height: 24px; padding: 4px 8px; font-size: 11.5px; border-top: 1px solid #808080; }
+/* 커서: 조작하는 줄로 미끄러져 간다 */
+.fl-cursor { position: absolute; z-index: 2; left: 55%; top: calc(12px + var(--row) * var(--rh) + 18px); width: 16px; height: 22px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 22'%3E%3Cpath d='M1 1v17l4.2-4 2.9 6.6 2.6-1.1-2.9-6.5H14z' fill='%23111' stroke='%23fff' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat; filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, .3)); transition: top .4s cubic-bezier(.2, 0, 0, 1), left .4s cubic-bezier(.2, 0, 0, 1); }
+.fl-cursor[data-to=menu] { left: 24%; top: -6px; }
+.fl-cursor[data-to=save] { left: calc(100% - 50px); }
+@keyframes fl-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@media (prefers-reduced-motion: reduce) {
+  .fl-cursor { transition: none; }
+  .fl-screen-form > p > b { animation: none; }
+}
+
+/* ---------- Copilot Studio: 에이전트 설정 (문서 블록을 설정 카드처럼 보인다 — 체험 화면과 결과 화면 모두) ---------- */
+.sc-shell.is-office[data-app=studio], .desk-win.is-doc[data-app=studio] { --track: #7a5cff; --track-ink: #5c3d8a; }
+.sc-shell.is-office[data-app=studio] .sc-canvas { background: #faf9f8; }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=studio] .wb-wd { padding: 20px 24px 28px; background: #faf9f8; }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=studio] .wb-wd-page { max-width: 760px; padding: 0; display: grid; gap: 12px; line-height: 1.7; background: none; box-shadow: none; }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=studio] .wb-wd-h1 { padding: 0; font-size: 20px; border-bottom: 0; }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=studio] .wb-wd-meta span { padding: 2px 10px; color: var(--track-ink); background: color-mix(in srgb, var(--track) 10%, #fff); border-radius: var(--borderRadiusCircular); }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=studio] .wb-wd-sec { margin: 0; padding: 14px 18px 16px; background: #fff; border: 1px solid #e1dfdd; border-radius: var(--borderRadiusXLarge); box-shadow: 0 1px 2px rgba(0, 0, 0, .05); }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=studio] .wb-wd-sec h4 { margin-top: 0; color: var(--track-ink); }
+/* 단계마다 새로 붙는 설정·화면 조각이 떠오르듯 나타난다 */
+.sc-shell.is-office:is([data-app=studio], [data-app=code], [data-app=forms]) .sc-canvas .wb-wd-page > div { animation: sf-rise .35s ease both; }
+@keyframes sf-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .sc-shell.is-office .sc-canvas .wb-wd-page > div { animation: none; } }
+
+/* ---------- Copilot Code: 앱 미리보기 (문서 블록을 앱 화면처럼 보인다 — 체험 화면과 결과 화면 모두) ---------- */
+.sc-shell.is-office[data-app=code], .desk-win.is-doc[data-app=code] { --track: #0f7b6c; --track-ink: #0b5a4f; }
+.sc-shell.is-office[data-app=code] .sc-canvas { background: #eef1f0; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-wd { padding: 18px 22px 26px; background: #eef1f0; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-wd-page { max-width: 600px; padding: 0 20px 20px; display: grid; gap: 10px; line-height: 1.6; overflow: hidden; background: #fff; border: 1px solid #d6dbd9; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, .08); }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-wd-h1 { margin: 0 -20px; padding: 12px 20px; font-size: 16px; color: #fff; background: var(--track); border-bottom: 0; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-wd-meta { margin: 0 -20px; padding: 5px 20px; font-size: 11.5px; color: var(--track-ink); background: color-mix(in srgb, var(--track) 10%, #fff); }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-wd-sec { margin: 4px 0 0; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-wd-sec h4 { margin: 0 0 4px; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-ol-f { margin: 0; padding: 0; display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: center; gap: 10px; border: 0; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-ol-f u { font-size: 12.5px; text-decoration: none; color: #605e5c; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-ol-f b { min-height: 32px; padding: 5px 10px; font-size: 13px; font-weight: 400; background: #fff; border: 1px solid #c8c6c4; border-radius: 6px; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-ct-note { margin: 0; padding: 8px 12px; font-size: 12.5px; color: var(--track-ink); background: color-mix(in srgb, var(--track) 10%, #fff); border: 0; border-radius: 6px; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-xl-chart { width: auto; margin: 0; box-shadow: none; border-color: #e1dfdd; border-radius: 8px; }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-xl-chart i { background: var(--track); }
+:is(.sc-shell.is-office, .desk-win.is-doc):is([data-app=code], [data-app=forms]) .wb-xl-chart .is-warn i { background: #d13438; }
+.wb-app-btn { margin: 2px 0 0; text-align: right; }
+.wb-app-btn :is(u, button) { display: inline-block; padding: 7px 22px; font-size: 13px; font-weight: 600; text-decoration: none; color: #fff; background: var(--track, #0f7b6c); border-radius: 6px; }
+
+/* ---------- Copilot in Outlook · Teams · Forms ---------- */
+.sc-shell.is-office[data-app=outlook] { --track: var(--m365-outlook-bright); --track-ink: var(--m365-outlook-dark); }
+.sc-shell.is-office[data-app=outlook] .sc-canvas { background: #fff; }
+.sc-shell.is-office[data-app=teams] { --track: var(--m365-teams-bright); --track-ink: var(--m365-teams-dark); }
+.sc-shell.is-office[data-app=forms], .desk-win.is-doc[data-app=forms] { --track: #038387; --track-ink: #025e60; }
+.sc-shell.is-office[data-app=forms] .sc-canvas { background: #eef1f0; }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=forms] .wb-wd-sec { padding: 10px 14px 12px; border: 1px solid #e1dfdd; border-radius: 8px; }
+:is(.sc-shell.is-office, .desk-win.is-doc)[data-app=forms] .wb-wd-sec ul { list-style: "○  "; }
+
+/* 제품별 보기: 열이 네 개 이상이면 제목과 글자를 줄여 옆 열과 겹치지 않게 한다 */
+.booth-product-board:has(> article:nth-child(4)) > article { padding-inline: clamp(8px, 1vw, 14px); }
+.booth-product-board:has(> article:nth-child(4)) header > h2 { font-size: min(3.4cqh, 1.7cqw); }
+.booth-product-board:has(> article:nth-child(4)) .booth-product-body > p { font-size: min(3cqh, 1.25cqw); }
+.booth-product-board:has(> article:nth-child(4)) li button { font-size: min(3cqh, 1.3cqw); padding: min(2.4cqh, 1.1cqw); }
+.booth-product-board:has(> article:nth-child(6)) header > h2 { font-size: min(3cqh, 1.42cqw); }
+
+/* ---------- Copilot Studio: 왼쪽 탐색 · 위쪽 한 줄(탭 + 테스트·게시) · 메인 화면에서 직접 만들기 ---------- */
+.sc-app-nav { display: grid; align-content: start; gap: 2px; padding: 10px 6px; font-size: 10.5px; color: #605e5c; background: #f5f4f2; border-right: 1px solid var(--sc-line, #e6e3df); }
+.sc-app-nav i { padding: 9px 2px; font-style: normal; text-align: center; border-radius: 6px; }
+.sc-app-nav i.on { font-weight: 600; color: var(--track-ink); background: color-mix(in srgb, var(--track) 12%, #fff); }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-office-body { grid-template-columns: 64px minmax(0, 1fr) clamp(300px, 26%, 400px); }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 16px; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups { flex-wrap: nowrap; gap: 8px; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups > :is(span, button) { display: inline-flex; align-items: center; gap: 6px; min-width: 0; padding: 6px 16px; font: inherit; color: #1b1a19; background: #fff; border: 1px solid #c8c6c4; border-radius: 6px; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups > :last-child { color: #fff; background: var(--track); border-color: var(--track); }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups > :last-child i { color: #fff; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups :is(b, i) { font-size: 12.5px; font-style: normal; color: inherit; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups b:empty { display: none; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-ribbon-groups button { cursor: pointer; }
+/* 아직 채우지 않은 설정 카드와 "+ 추가" 단추 */
+.wb-wd-sec.is-empty { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-style: dashed !important; background: #fdfdfc !important; box-shadow: none !important; }
+.wb-wd-sec.is-empty h4 { margin: 0; }
+.wb-add { flex: none; padding: 6px 14px; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--track-ink, #5c3d8a); background: #fff; border: 1px solid currentColor; border-radius: 999px; }
+button.wb-add { cursor: pointer; }
+/* 에이전트를 만들기 전의 메인 화면 */
+.st-create { width: min(560px, calc(100% - 48px)); margin: 48px auto; padding: 26px 28px; display: grid; gap: 10px; justify-items: start; font-family: var(--desk-font); background: #fff; border: 1px solid #e1dfdd; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, .08); }
+.st-create > b { font-size: 19px; }
+.st-create > span { font-size: 13px; color: #605e5c; }
+.st-create > p { width: 100%; margin: 4px 0; padding: 12px 14px; font-size: 14px; line-height: 1.7; background: #faf9f8; border: 1px solid #c8c6c4; border-radius: 8px; }
+.st-create > i { padding: 2px 10px; font-size: 12px; font-style: normal; color: var(--track-ink); background: color-mix(in srgb, var(--track) 10%, #fff); border-radius: 999px; }
+.st-create > :is(button, u) { justify-self: end; padding: 8px 24px; font: inherit; font-size: 13.5px; font-weight: 600; text-decoration: none; color: #fff; background: var(--track); border: 0; border-radius: 6px; }
+.st-create > button { cursor: pointer; }
+
+/* 앱 미리보기 안의 누를 수 있는 단추, 만들기 직후의 빈 화면 */
+.wb-app-btn button { font-family: inherit; border: 0; cursor: pointer; }
+.sc-shell.is-office:is([data-app=studio], [data-app=code]) .sc-canvas .wb-wd-page:empty { min-height: 120px; padding: 0; display: grid; place-items: center; }
+.sc-shell.is-office[data-app=studio] .sc-canvas .wb-wd-page:empty::before { content: "에이전트를 만드는 중입니다…"; font-size: 13px; color: #8a8886; }
+.sc-shell.is-office[data-app=code] .sc-canvas .wb-wd-page:empty::before { content: "계획을 확인하면 앱 미리보기가 여기에 나타납니다"; font-size: 13px; color: #8a8886; }
