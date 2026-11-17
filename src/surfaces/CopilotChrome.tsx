@@ -51,7 +51,7 @@ export function CsNav({ surface, session }: { surface: Cs; session?: string }) {
   );
 }
 
-/** 위쪽 막대. 게시 단추(target 'publish')만 누를 수 있다 */
+/** 위쪽 막대. 게시 단추(target 'publish')만 누를 수 있다. live: 게시했거나, 이미 있던 에이전트를 연 경우 */
 export function CsTop({ surface, name, live, creating, tabs, zone, hot, onAct }: {
   surface: Cs; name: string; live: boolean; creating: boolean; tabs: string[]; zone: string; hot: boolean; onAct: () => void;
 }) {

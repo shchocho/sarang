@@ -196,7 +196,7 @@ export function AppWindow({ s, st, vars, ids, shown, streamRef, mark, ask, onSen
           extra={surface === 'excel' ? <div className="or-fx" aria-hidden="true"><i>A1</i><b>fx</b><span /></div> : undefined}
         />
       ) : web ? <WebTop surface={web} name={webName} zone={`sc-zone ${mark('ribbon')}`} hot={hot('copilot')} onAct={onAct} />
-        : cs ? <CsTop surface={cs} name={creating ? '제목 없는 에이전트' : name} live={ids.includes('live')} creating={creating} tabs={ui.tabs} zone={`sc-zone ${mark('ribbon')}`} hot={hot('publish')} onAct={onAct} /> : (
+        : cs ? <CsTop surface={cs} name={creating ? '제목 없는 에이전트' : name} live={ids.includes('live') || doc?.origin === 'read'} creating={creating} tabs={ui.tabs} zone={`sc-zone ${mark('ribbon')}`} hot={hot('publish')} onAct={onAct} /> : (
         <div className={`sc-ribbon sc-zone ${mark('ribbon')}`}>
           <span className="sc-ribbon-tabs">{ui.tabs.map((t, i) => <i key={t} className={i === 1 ? 'on' : undefined}>{t}</i>)}</span>
           <span className="sc-ribbon-groups">
