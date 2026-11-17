@@ -108,6 +108,12 @@
   - Forms: 위쪽 도구 모음(스타일 · 설정 · 미리 보기 · **응답 수집** · **응답 보기** · 프레젠테이션), 새 양식 위의 **"Copilot으로 초안 작성"** 상자와 그 안내 글. 오른쪽 Copilot 창은 처음에는 없습니다.
     - 생성 → 유지 → 오른쪽 아래 Copilot 단추로 채팅 열기 → 응답 보기에서 Copilot으로 결과 분석: https://support.microsoft.com/ko-kr/forms/welcome-to-copilot-in-forms
   - **확인하지 못한 화면**: Teams 의 **회의 중 창**(모임 컨트롤), Forms 의 **생성 뒤 화면 · Copilot 채팅 창 · 응답 보기 화면**, Outlook 의 **작성 창 안 Copilot 상자**는 실제 화면을 보지 못했습니다. 이 부분은 위 지원 문서의 순서만 따랐고, 화면 모양(대화 형식, 입력란 글)은 다른 앱의 Copilot 창과 같은 틀로 그렸습니다. Copilot Studio 와 Code 탭도 실제 화면과 대조하지 못했습니다(이전 구성 그대로).
+- **Copilot Code · Copilot Studio · Teams · Forms 화면 (2026-11-17, 받은 한국어 실제 화면 4장으로 확인)**: 화면마다 한 장씩만 봤습니다.
+  - Copilot 앱의 코드 탭 시작 화면: 왼쪽(홈 · **코드** / 새 세션 · 내 작업 · 플러그 인 / 세션 — 로컬 · 클라우드), 가운데 "함께 만들어 보세요." 와 입력 상자(새 프로젝트 · 로컬 / "무엇이든 만들기" / 대화형 · 모델), 오른쪽 위 FRONTIER. `src/surfaces/CopilotChrome.tsx`
+  - Copilot Studio 에이전트 빌드 화면: 위쪽(이름 · 초안 / **빌드** · 미리 보기 · 평가 · 모니터 / 검토 · 게시), 이름 칸 · "안내" 지침 칸, 오른쪽 상자(기술 · 도구 · 지식 · 연결된 에이전트 · 메모리). 같은 파일.
+  - Teams 채팅: 제목 표시줄(‹ › · 검색), 목록 위쪽의 Copilot · 빨리 보기(멘션 · 초안). Forms: 연한 배경 위 흰 양식 카드, "Copilot으로 초안 작성" 상자의 글자 수(0 / 2000) · 붙이기 · 보내기, 왼쪽 서식 파일.
+  - **확인하지 못한 화면**: Code 의 만든 뒤 화면(앱 · 미리보기 · 데이터 · 권한 탭, 공유 · 게시), Studio 의 미리 보기 탭(지금은 오른쪽 "에이전트 테스트" 창으로 둠). 받은 Studio 화면에는 **토픽이 없고 기술 · 도구 · 지식**만 있습니다. `agent-newcomer` 는 아직 "Standard 하네스 · 토픽"으로 가르치므로 고객사 환경에 맞춰 정해야 합니다.
+  - 목록 카드의 제품 아이콘: Forms(Microsoft CDN), Copilot Studio(Power Platform 공식 아이콘 묶음, 교육 자료 사용 허용)를 `public/logo/` 에 넣었습니다. Cowork · Copilot Code 는 전용 공식 아이콘을 찾지 못해 Copilot 아이콘을 씁니다.
 - **Copilot 에이전트**: 고객사 답이 없어 기본값(Copilot Studio 안내 에이전트 1편 + Cowork 1편)으로 만들었습니다. 2026-11-14 확인.
   - 지식 원본(공개 웹사이트 · 올린 문서 · SharePoint · Dataverse · 커넥터): https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-copilot-studio
   - 토픽(토픽 추가 → 처음부터. 클래식 오케스트레이션은 트리거 문구 5~10개, 생성형 오케스트레이션은 토픽 설명으로 고름): https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-edit-topics
