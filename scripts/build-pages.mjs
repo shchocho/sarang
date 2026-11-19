@@ -31,5 +31,5 @@ for (const name of readdirSync(src)) {
 writeFileSync(join(out, '.nojekyll'), '');
 // /start 로 들어와도 열리게 한다 (화면 주소는 #/start 형식이라 Pages 에서는 폴더가 있어야 404 가 나지 않는다)
 mkdirSync(join(out, 'start'));
-writeFileSync(join(out, 'start', 'index.html'), '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta http-equiv="refresh" content="0;url=../#/start"><title>Teams · Copilot 실습 — 사랑의교회 교육용</title><a href="../#/start">실습 사이트 열기</a>');
+writeFileSync(join(out, 'start', 'index.html'), '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta http-equiv="refresh" content="0;url=../#/start"><title>사랑의교회 실습 [교육용 시뮬레이터] — Teams · Copilot 비공식 연습 화면</title><a href="../#/start">실습 사이트 열기</a>');
 console.log(`✓ dist-pages/ 준비 완료 — 화면 ${(statSync(join(out, 'index.html')).size / 1048576).toFixed(1)}MB (공개, 잠금 없음)`);

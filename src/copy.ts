@@ -13,7 +13,7 @@ export const COPY = {
   /** 목록 화면 뒤로가기 라벨 */
   backToHome: '영역 선택',
   /** 푸터 — 고객사 답(PLAN.md)에 따라 교회 이름만 쓰고 로고는 쓰지 않음 */
-  footerLeft: '사랑의교회 교육용 실습',
+  footerLeft: '사랑의교회 교육용 실습 · 비공식 시뮬레이터(Microsoft 공식 사이트 아님)',
   footerRight: 'Teams & Copilot Hands-on',
   /** 결과 화면 QR 안내 — public/ 에 이미지를 넣고 경로(예: 'qr/experience-qr.png')를 적으면 버튼이 나타남 */
   qr: { src: '', label: 'Copilot 실습 안내' },
